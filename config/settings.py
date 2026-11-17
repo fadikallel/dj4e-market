@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 APP_NAME = "Chuck's Marketplace"   # Change
 
-DJ4E_CODE = '42'
+DJ4E_CODE = '7bbe4f4a7d7e316776e9224611c4c42f'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-yb3=cy&k285b#=!h42%bf+g*07v4lrr+l)fj+_tf1e348fpnkj"
