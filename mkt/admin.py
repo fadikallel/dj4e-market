@@ -1,4 +1,4 @@
 from django.contrib import admin
 from mkt.models import Ad
 # Register your models here.
-admin.register(Ad)
+admin.site.register(Ad)
