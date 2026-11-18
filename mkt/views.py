@@ -5,8 +5,7 @@ from mkt.owner import OwnerCreateView, OwnerDeleteView, OwnerDetailView, OwnerLi
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from mkt.models import Ad
-from mkt.forms import CreateForm
-
+from mkt.forms import CreateForm, CommentForm
 # Create your views here.
 
 class AdListView(OwnerListView):
@@ -15,6 +14,12 @@ class AdListView(OwnerListView):
     
 class AdDetailView(OwnerDetailView):
     model = Ad 
+
+    def get(self, request, pk):
+        comments = Ad.objects.get(id=pk).comments.values()
+        comment_form = CommentForm()
+        ctx = {'comment_list' : comments, 'comment_form': comment_form}
+        return render(request, self.template_name, ctx)
 
 
 class AdCreateView(LoginRequiredMixin, View ):
