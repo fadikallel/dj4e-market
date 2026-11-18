@@ -2,7 +2,8 @@ from django import forms
 from mkt.models import Ad 
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from mkt.humanize import naturalsize
-
+from django.core.exceptions import ValidationError
+from django.core import validators
 
 class CreateForm(forms.ModelForm):
     max_upload_limit = 2 * 1024 * 1024 
@@ -38,3 +39,7 @@ class CreateForm(forms.ModelForm):
             instance.save()
 
         return instance
+
+
+class CommentForm(forms.Form):
+    comment = forms.CharField(required=True, max_length=500, min_length=3, strip=True)
