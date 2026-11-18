@@ -4,7 +4,7 @@
 <p>Are you sure you want to delete the ad: {{ad}}?</p>
 <form method="POST">
     {% csrf_token %}
-    <input type="submit" class="btn btn-primary" value="Yes,delete.">
+    <input type="submit" class="btn btn-primary" value="Yes, delete.">
     <input type="submit" class="btn btn-secondary" value="Cancel" onclick="window.location='{% url 'mkt:all' %}'; return false;">
 </form>
 {% endblock %}
