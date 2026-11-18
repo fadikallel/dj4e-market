@@ -38,4 +38,21 @@
 
 <p>{{ad.text}}</p>
 <p>Price: ${{ad.price}}</p>
+{% if user.is_authenticated %}
+{% load crispy_forms_tags %}
+<form method="POST" action="{% url 'mkt:ad_comment_create' ad.id %}">
+    {% csrf_token %}
+    {{ comment_form | crispy}}
+    <input type="submit" value="Submit">
+    <input type="submit" value="All Ads" onclick="window.location.href='{% url 'mkt:all' %}'; return false;"> 
+</form>
+{% endif %}
+{% for comment in comment_list %}
+<p>{{ comment.text}}
+     ({{comment.created_at | naturaltime}})
+     {% if user == comment.owner %}
+      <a href="{% url 'mkt:ad_comment_delete' comment.id %}"><i class="fa fa-trash"></i></a>
+      {% endif %}
+</p>
+{% endfor %}
 {% endblock %}
