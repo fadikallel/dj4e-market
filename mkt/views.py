@@ -4,12 +4,22 @@ from django.http import HttpResponse
 from mkt.owner import OwnerCreateView, OwnerDeleteView, OwnerDetailView, OwnerListView, OwnerUpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
-from mkt.models import Ad, Comment
+from mkt.models import Ad, Comment, Fav
 from mkt.forms import CreateForm, CommentForm
 # Create your views here.
 
 class AdListView(OwnerListView):
     model = Ad
+
+    def get(self, request):
+        ad_list = Ad.objects.all() 
+        favourites = [] 
+        if request.user.is_authenticated:
+            rows = request.user.favorites_ads.values('id')
+            favourites = [row['id'] for row in rows ]
+        print(favourites)
+        ctx = {'ad_list': ad_list, 'favorites' : favourites}
+        return render(request, 'mkt/ad_list.html', ctx)
 
     
 class AdDetailView(OwnerDetailView):
@@ -95,3 +105,20 @@ class CommentDeleteView(OwnerDeleteView):
     def get_success_url(self):
         ad = self.object.ad
         return reverse_lazy('mkt:ad_detail', args=[ad.id])
+
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+from django.db.utils import IntegrityError
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ToggleFavoriteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        ad = get_object_or_404(Ad, id=pk)
+        fav = Fav(user=request.user, ad=ad)
+        try: 
+            fav.save()
+            return HttpResponse("Favorite added 42")
+        except IntegrityError:
+            Fav.objects.get(user=request.user, ad=ad).delete()
+            return HttpResponse("Favorite deleted 42")
+        return HttpResponse("Something went wrong")
