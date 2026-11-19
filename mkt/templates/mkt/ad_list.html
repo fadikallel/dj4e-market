@@ -24,6 +24,8 @@
                     {% if ad.id in favorites %} fav {% endif %}
                 >
                 </dj4e-favstar>
+                <p>{{ad.text}}</p>
+                <p>posted by {{ad.owner}}</p>
             </li>
         {% endfor %}
     </ul>
