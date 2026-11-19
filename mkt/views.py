@@ -57,6 +57,7 @@ class AdCreateView(LoginRequiredMixin, View ):
         ad = form.save(commit=False)
         ad.owner = self.request.user
         ad.save()
+        form.save_m2m()
         return redirect(self.success_url)
 
 
@@ -79,6 +80,7 @@ class AdUpdateView(OwnerUpdateView):
         ad = form.save(commit=False)
         ad.owner = self.request.user
         ad.save()
+        form.save_m2m()
         return redirect(self.success_url)
 
 

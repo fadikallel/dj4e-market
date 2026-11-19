@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinLengthValidator
 from django.conf import settings
-
+from taggit.managers import TaggableManager
 class Ad(models.Model):
     title = models.CharField(
         max_length=200,
@@ -9,6 +9,7 @@ class Ad(models.Model):
     )
     price = models.DecimalField(max_digits=7, decimal_places=2, null=True)
     text = models.TextField()
+    tags = TaggableManager(blank=True)
     # Picture
     picture = models.BinaryField(null=True, blank=True, editable=True)
     content_type = models.CharField(max_length=256, null=True, blank=True, help_text='The MIMEType of the file')
