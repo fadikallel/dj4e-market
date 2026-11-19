@@ -16,7 +16,8 @@ class Ad(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     comments = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Comment', related_name='comments_owned')
-    
+    favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Fav', related_name='favorites_ads')
+
     def __str__(self):
         return self.title
 
@@ -28,7 +29,6 @@ class Comment(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Fav', related_name='favorites_ads')
     # Shows up in the admin list
     def __str__(self):
         if len(self.text) < 15: return self.text
