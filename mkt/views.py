@@ -6,19 +6,23 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from mkt.models import Ad, Comment, Fav
 from mkt.forms import CreateForm, CommentForm
+from django.db.models import Q
 # Create your views here.
 
 class AdListView(OwnerListView):
-    model = Ad
-
     def get(self, request):
-        ad_list = Ad.objects.all() 
+        strval = request.GET.get('search', False)
+        if strval:
+            query = Q(title__icontains=strval)
+            query.add(Q(text__icontains=strval), Q.OR)
+            ad_list = Ad.objects.filter(query)
+        else:
+            ad_list = Ad.objects.all() 
         favourites = [] 
         if request.user.is_authenticated:
             rows = request.user.favorites_ads.values('id')
             favourites = [row['id'] for row in rows ]
-        print(favourites)
-        ctx = {'ad_list': ad_list, 'favorites' : favourites}
+        ctx = {'ad_list': ad_list, 'favorites' : favourites, 'search': strval}
         return render(request, 'mkt/ad_list.html', ctx)
 
     
